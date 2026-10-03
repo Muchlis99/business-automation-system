@@ -1,0 +1,30 @@
+# Workflow Roadmap
+
+The automation platform is organized as deterministic, auditable workflows.
+
+| ID | Scope |
+|---|---|
+| WF-01 | Intake and validation |
+| WF-02 | Planning, PRD, and task validation |
+| WF-03 | Orchestration |
+| WF-04 | ADR generation and review |
+| WF-05 | Figma to development handoff |
+| WF-06 | Frontend quality assurance |
+| WF-07 | API quality assurance |
+| WF-08 | Database quality assurance |
+| WF-09 | Mobile quality assurance |
+| WF-10/11 | GitHub integration and AI review |
+| WF-12 | Tests and coverage |
+| WF-13 | Security findings |
+| WF-14/15 | Deployment gates and deployment |
+| WF-16/17 | Incident detection and response |
+| WF-18 | Technical debt |
+| WF-19 | Documentation as code |
+| WF-20 | Knowledge base |
+| WF-21/22 | Daily brief and reporting |
+| WF-23 | Learning loop |
+| WF-24 | Daily engineering metrics |
+
+## Governance
+
+A workflow may propose an action automatically, but high-impact production actions require human approval. AI review can identify issues and propose changes but cannot approve its own recommendations.
