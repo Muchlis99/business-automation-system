@@ -1,0 +1,10 @@
+{
+  "request_id":"REQ-0007",
+  "plan_id":"PLAN-0007",
+  "tasks":[
+    {"task_id":"T-001","title":"Define API contract","requirement_ids":["R-001"]},
+    {"task_id":"T-002","title":"Implement API endpoint","requirement_ids":["R-001"],"depends_on":["T-001"]},
+    {"task_id":"T-003","title":"Add API tests","requirement_ids":["R-001"],"depends_on":["T-002"]},
+    {"task_id":"T-004","title":"Update documentation","requirement_ids":["R-002"],"depends_on":["T-001"]}
+  ]
+}

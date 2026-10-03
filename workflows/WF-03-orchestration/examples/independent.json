@@ -1,0 +1,8 @@
+{
+  "request_id":"REQ-0008",
+  "plan_id":"PLAN-0008",
+  "tasks":[
+    {"task_id":"T-020","title":"Second independent task","requirement_ids":["R-002"]},
+    {"task_id":"T-010","title":"First independent task","requirement_ids":["R-001"]}
+  ]
+}
