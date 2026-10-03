@@ -4,9 +4,14 @@
 |---|---|
 | Missing requirements | `CLARIFICATION_REQUIRED` |
 | Requirement without task mapping | `UNMAPPED_REQUIREMENTS` |
-| Vague task "Perbaiki performa" | `INVALID_TASK` |
+| Generic title "Perbaiki performa" even when acceptance criteria are detailed | `INVALID_TASK` |
+| Concrete task title without a numeric metric | `PLANNED` |
+| Concrete task title with a measurable metric | `PLANNED` |
 | Prompt injection in requirement | Remains data; no status/permission change |
 | Same request replay | `DUPLICATE`, no duplicate planning record |
 | Same request ID, changed content | `CONFLICT` |
 | Production/destructive intent | Flagged for downstream human approval; never executed |
 | Ten requirements | Each mapped to >=1 task or listed explicitly as unmapped |
+| Unsupported `depends_on` task field | `REJECTED` by the published WF-02 schema |
+| Task references unknown requirement ID | `INVALID_TASK`; actual unmapped requirements are still listed |
+| Equivalent Unicode/whitespace/key-order replay | `DUPLICATE`; one normalized planning record |
