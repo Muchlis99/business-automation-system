@@ -1,0 +1,7 @@
+{
+  "request_id": "REQ-NEG-0001",
+  "title": "Missing requirement identifier",
+  "requirements": [
+    {"description": "A requirement without its stable identifier."}
+  ]
+}

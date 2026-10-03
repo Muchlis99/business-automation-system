@@ -1,0 +1,7 @@
+{
+  "request_id": "REQ-NEG-0002",
+  "plan_id": "PLAN-NEG-0002",
+  "tasks": [
+    {"task_id": "T-NEG-001", "requirement_ids": ["R-001"]}
+  ]
+}

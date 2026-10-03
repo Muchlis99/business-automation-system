@@ -46,28 +46,8 @@ jobs:
       - name: Validate contract structure
         run: python scripts/validate_contracts.py
 
-      - name: Validate positive fixtures against JSON Schema
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          from jsonschema import Draft202012Validator
-
-          for schema_path in sorted(Path("workflows").glob("*/schema.json")):
-              schema = json.loads(schema_path.read_text(encoding="utf-8"))
-              validator = Draft202012Validator(schema)
-              valid_fixtures = sorted(schema_path.parent.glob("examples/valid.json"))
-              if not valid_fixtures:
-                  raise SystemExit(f"{schema_path}: missing examples/valid.json")
-              for fixture_path in valid_fixtures:
-                  instance = json.loads(fixture_path.read_text(encoding="utf-8"))
-                  errors = sorted(validator.iter_errors(instance), key=lambda e: list(e.path))
-                  if errors:
-                      for error in errors:
-                          print(f"{fixture_path}: {error.message}")
-                      raise SystemExit(1)
-                  print(f"OK {fixture_path} matches {schema_path}")
-          PY
+      - name: Validate positive and negative fixtures against JSON Schema
+        run: python scripts/validate_schema_fixtures.py
 
   wf-01-intake:
     runs-on: ubuntu-latest
