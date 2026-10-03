@@ -1,0 +1,11 @@
+{
+  "action": "RECORD_REVIEW",
+  "request_id": "REQ-0007",
+  "plan_id": "PLAN-0007",
+  "adr_version": 1,
+  "review": {
+    "reviewer_id": "human-reviewer-17",
+    "outcome": "ACCEPTED",
+    "comment": "The trade-offs and migration impact are sufficiently documented."
+  }
+}
