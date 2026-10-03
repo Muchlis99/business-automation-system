@@ -1,0 +1,46 @@
+{
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "$id":"https://business-automation-system.local/schemas/wf-03-orchestration.json",
+  "title":"WF-03 Orchestration Input",
+  "type":"object",
+  "additionalProperties":false,
+  "required":["request_id","plan_id","tasks"],
+  "properties":{
+    "request_id":{"type":"string","minLength":1,"maxLength":100},
+    "plan_id":{"type":"string","minLength":1,"maxLength":100},
+    "tasks":{
+      "type":"array","minItems":1,
+      "items":{
+        "type":"object",
+        "additionalProperties":false,
+        "required":["task_id","title","requirement_ids"],
+        "properties":{
+          "task_id":{"type":"string","minLength":1,"maxLength":100},
+          "title":{"type":"string","minLength":1,"maxLength":300},
+          "requirement_ids":{
+            "type":"array","minItems":1,
+            "items":{"type":"string","minLength":1,"maxLength":100}
+          },
+          "depends_on":{
+            "type":"array",
+            "items":{"type":"string","minLength":1,"maxLength":100},
+            "uniqueItems":true
+          },
+          "risk":{
+            "type":"string",
+            "enum":["low","medium","high","critical"]
+          },
+          "environment":{
+            "type":"string",
+            "enum":["dev","staging","prod"]
+          },
+          "action":{
+            "type":"string",
+            "minLength":1,
+            "maxLength":100
+          }
+        }
+      }
+    }
+  }
+}
