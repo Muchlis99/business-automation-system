@@ -9,11 +9,12 @@ permissions:
   contents: read
 
 jobs:
-  baseline:
+  contracts:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate repository
+
+      - name: Validate repository baseline
         run: |
           test -f README.md
           test -d docs
@@ -21,3 +22,49 @@ jobs:
           test -d database
           test -d workflows
           test -d tests
+
+      - name: Validate JSON syntax
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          files = sorted(
+              list(Path("workflows").glob("*/schema.json")) +
+              list(Path("workflows").glob("*/examples/*.json"))
+          )
+          if not files:
+              raise SystemExit("No workflow JSON files found")
+          for path in files:
+              json.loads(path.read_text(encoding="utf-8"))
+              print(f"OK {path}")
+          PY
+
+      - name: Install schema validator
+        run: python -m pip install --disable-pip-version-check -r requirements-ci.txt
+
+      - name: Validate contract structure
+        run: python scripts/validate_contracts.py
+
+      - name: Validate positive fixtures against JSON Schema
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from jsonschema import Draft202012Validator
+
+          for schema_path in sorted(Path("workflows").glob("*/schema.json")):
+              schema = json.loads(schema_path.read_text(encoding="utf-8"))
+              validator = Draft202012Validator(schema)
+              valid_fixtures = sorted(schema_path.parent.glob("examples/valid.json"))
+              if not valid_fixtures:
+                  raise SystemExit(f"{schema_path}: missing examples/valid.json")
+              for fixture_path in valid_fixtures:
+                  instance = json.loads(fixture_path.read_text(encoding="utf-8"))
+                  errors = sorted(validator.iter_errors(instance), key=lambda e: list(e.path))
+                  if errors:
+                      for error in errors:
+                          print(f"{fixture_path}: {error.message}")
+                      raise SystemExit(1)
+                  print(f"OK {fixture_path} matches {schema_path}")
+          PY
