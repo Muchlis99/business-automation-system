@@ -13,3 +13,7 @@ PostgreSQL is the primary transactional data store.
 ## WF-01 Intake
 
 `migrations/001_wf_01_intake.sql` creates the durable intake table and unique `request_id` constraint used for replay detection. Apply it with `npm run migrate` from `api/wf-01-intake` after setting `DATABASE_URL`; the migration is run by the service deployment process, never by n8n.
+
+## WF-02 Planning
+
+`migrations/002_wf_02_planning.sql` stores normalized planning outcomes under a unique `request_id`, as required for durable duplicate and changed-content conflict detection. Apply it with `npm run migrate` from `api/wf-02-planning` after setting `DATABASE_URL`. The table is additive and does not alter WF-01 data; a rollback should disable the service rather than delete planning records.
