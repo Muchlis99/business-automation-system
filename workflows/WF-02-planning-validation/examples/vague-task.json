@@ -1,0 +1,6 @@
+{
+  "request_id":"REQ-0006",
+  "title":"Performance improvement",
+  "requirements":[{"requirement_id":"R-001","description":"Reduce API latency for the checkout endpoint."}],
+  "tasks":[{"task_id":"T-001","title":"Perbaiki performa","requirement_ids":["R-001"]}]
+}
