@@ -17,3 +17,7 @@ PostgreSQL is the primary transactional data store.
 ## WF-02 Planning
 
 `migrations/002_wf_02_planning.sql` stores normalized planning outcomes under a unique `request_id`, as required for durable duplicate and changed-content conflict detection. Apply it with `npm run migrate` from `api/wf-02-planning` after setting `DATABASE_URL`. The table is additive and does not alter WF-01 data; a rollback should disable the service rather than delete planning records.
+
+## WF-03 Orchestration
+
+`migrations/003_wf_03_orchestration.sql` adds the append-only `wf03_orchestrations` table with a unique `plan_id` for durable replay and changed-content conflict detection. Apply it with `npm run migrate` from `api/wf-03-orchestration` after setting `DATABASE_URL`. The migration does not alter WF-01 or WF-02 data; rollback should disable the service rather than delete orchestration records.

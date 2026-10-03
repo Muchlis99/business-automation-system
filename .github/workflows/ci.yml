@@ -49,6 +49,49 @@ jobs:
       - name: Validate positive and negative fixtures against JSON Schema
         run: python scripts/validate_schema_fixtures.py
 
+  wf-03-orchestration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: wf03_test
+          POSTGRES_USER: wf03
+          POSTGRES_PASSWORD: wf03-test-only-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wf03 -d wf03_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://wf03:wf03-test-only-password@localhost:5432/wf03_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/wf-03-orchestration/package-lock.json
+
+      - name: Install WF-03 dependencies
+        working-directory: api/wf-03-orchestration
+        run: npm ci
+
+      - name: Typecheck WF-03
+        working-directory: api/wf-03-orchestration
+        run: npm run typecheck
+
+      - name: Apply WF-03 PostgreSQL migration
+        working-directory: api/wf-03-orchestration
+        run: npm run migrate
+
+      - name: Test WF-03 service and PostgreSQL persistence
+        working-directory: api/wf-03-orchestration
+        run: npm test
+
   wf-01-intake:
     runs-on: ubuntu-latest
     services:
