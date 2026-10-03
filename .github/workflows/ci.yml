@@ -68,3 +68,46 @@ jobs:
                       raise SystemExit(1)
                   print(f"OK {fixture_path} matches {schema_path}")
           PY
+
+  wf-01-intake:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: wf01_test
+          POSTGRES_USER: wf01
+          POSTGRES_PASSWORD: wf01-test-only-password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U wf01 -d wf01_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgresql://wf01:wf01-test-only-password@localhost:5432/wf01_test
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: api/wf-01-intake/package-lock.json
+
+      - name: Install WF-01 dependencies
+        working-directory: api/wf-01-intake
+        run: npm ci
+
+      - name: Typecheck WF-01
+        working-directory: api/wf-01-intake
+        run: npm run typecheck
+
+      - name: Apply WF-01 PostgreSQL migration
+        working-directory: api/wf-01-intake
+        run: npm run migrate
+
+      - name: Test WF-01 service and PostgreSQL persistence
+        working-directory: api/wf-01-intake
+        run: npm test
