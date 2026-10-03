@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://business-automation-system.local/schemas/wf-04-adr.json",
+  "title": "WF-04 ADR Proposal and Review Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["action", "request_id", "plan_id", "adr_version"],
+  "properties": {
+    "action": {
+      "type": "string",
+      "enum": ["CREATE_DRAFT", "SUBMIT_FOR_REVIEW", "RECORD_REVIEW"]
+    },
+    "request_id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "plan_id": {"type": "string", "minLength": 1, "maxLength": 100},
+    "adr_version": {"type": "integer", "minimum": 1},
+    "adr": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "title",
+        "status",
+        "context",
+        "decision",
+        "consequences",
+        "alternatives",
+        "source_references"
+      ],
+      "properties": {
+        "title": {"type": "string", "minLength": 1, "maxLength": 300},
+        "status": {"const": "DRAFT"},
+        "context": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "decision": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "consequences": {"type": "string", "minLength": 1, "maxLength": 4000},
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["title", "description"],
+            "properties": {
+              "title": {"type": "string", "minLength": 1, "maxLength": 200},
+              "description": {"type": "string", "minLength": 1, "maxLength": 2000}
+            }
+          }
+        },
+        "source_references": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 500}
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reviewer_id", "outcome"],
+      "properties": {
+        "reviewer_id": {"type": "string", "minLength": 1, "maxLength": 200},
+        "outcome": {"type": "string", "enum": ["ACCEPTED", "REJECTED"]},
+        "comment": {"type": "string", "maxLength": 4000}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"action": {"const": "CREATE_DRAFT"}}},
+      "then": {
+        "required": ["adr"],
+        "not": {"required": ["review"]}
+      }
+    },
+    {
+      "if": {"properties": {"action": {"const": "SUBMIT_FOR_REVIEW"}}},
+      "then": {
+        "not": {
+          "anyOf": [
+            {"required": ["adr"]},
+            {"required": ["review"]}
+          ]
+        }
+      }
+    },
+    {
+      "if": {"properties": {"action": {"const": "RECORD_REVIEW"}}},
+      "then": {
+        "required": ["review"],
+        "not": {"required": ["adr"]}
+      }
+    }
+  ]
+}

@@ -34,13 +34,13 @@ def main():
     for schema_path in schema_paths:
         schema = json.loads(schema_path.read_text(encoding="utf-8"))
         validator = Draft202012Validator(schema)
-        positive_fixtures = sorted(schema_path.parent.glob("examples/valid.json"))
+        positive_fixtures = sorted(schema_path.parent.glob("examples/valid*.json"))
         negative_fixtures = sorted(
             schema_path.parent.glob("examples/schema-invalid-*.json")
         )
 
         if not positive_fixtures:
-            failures.append(f"{schema_path}: missing examples/valid.json")
+            failures.append(f"{schema_path}: missing examples/valid*.json")
         if not negative_fixtures:
             failures.append(f"{schema_path}: missing examples/schema-invalid-*.json")
 
